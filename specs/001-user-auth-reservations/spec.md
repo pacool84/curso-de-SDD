@@ -9,6 +9,14 @@
 **Input**: User description: "Autenticación de usuarios, exploración de canchas,
 creación y gestión de reservas de pádel"
 
+## Clarifications
+
+### Session 2026-09-26
+
+- Q: Después de cancelar una reserva futura, ¿debe permanecer visible en “Mis reservas”
+  con estado “Cancelada”? → A: Sí; la reserva permanece visible en el historial con
+  estado “Cancelada”.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Registrarse e iniciar sesión (Priority: P1)
@@ -109,8 +117,8 @@ disponible.
 1. **Given** un usuario autenticado, **When** abre “Mis reservas”, **Then** ve sus reservas
    futuras y su historial de reservas pasadas, cada una con cancha, fecha y hora.
 2. **Given** una reserva futura propia, **When** el usuario la selecciona y confirma la
-   cancelación, **Then** la reserva queda cancelada y el bloque puede volver a mostrarse
-   como disponible.
+   cancelación, **Then** la reserva queda cancelada, permanece visible en el historial
+   con estado “Cancelada” y el bloque puede volver a mostrarse como disponible.
 3. **Given** una reserva de otro usuario, **When** el usuario intenta verla o cancelarla,
    **Then** el sistema no permite acceder ni modificarla.
 4. **Given** una reserva pasada propia, **When** el usuario la consulta,
@@ -160,9 +168,9 @@ disponible.
   con una reserva existente y MUST evitar que se persista la reserva rechazada.
 - **FR-013**: System MUST limitar a una el número de reservas activas por usuario.
 - **FR-014**: System MUST permitir que cada usuario consulte únicamente sus propias
-  reservas, separadas entre futuras e históricas, mostrando cancha, fecha y hora.
+  reservas, separadas entre futuras e históricas, mostrando cancha, fecha, hora y estado.
 - **FR-015**: System MUST permitir cancelar una reserva futura propia después de una
-  confirmación explícita.
+  confirmación explícita y MUST conservarla en el historial con estado “Cancelada”.
 - **FR-016**: System MUST impedir la cancelación de reservas pasadas, de reservas de terceros
   y de reservas que ya no estén activas.
 - **FR-017**: System MUST traducir errores técnicos y conflictos a mensajes amigables sin
@@ -204,8 +212,8 @@ disponible.
 
 - La contraseña debe tener al menos 8 caracteres; el producto no incluye recuperación de
   contraseña en esta iteración.
-- Una “reserva activa” es una reserva futura no cancelada; las reservas pasadas permanecen
-  visibles como historial.
+- Una “reserva activa” es una reserva futura no cancelada; las reservas pasadas y las
+  reservas canceladas permanecen visibles como historial.
 - La grilla de un día contiene los bloques de 00:00–01:00 hasta 23:00–00:00; un bloque
   cuyo inicio coincide con la hora actual se considera no reservable si ya comenzó.
 - Las fechas y horas se interpretan según la zona horaria local del club.
