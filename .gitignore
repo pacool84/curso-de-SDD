@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+db/padel.db
+db/padel.db-*
+.DS_Store
