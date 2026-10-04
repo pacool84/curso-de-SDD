@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { AvailabilityGrid } from '../src/components/AvailabilityGrid';
+import { DatePicker } from '../src/components/DatePicker';
 
 describe('AvailabilityGrid', () => {
   it('shows 24 one-hour blocks with their status', () => {
@@ -15,5 +16,16 @@ describe('AvailabilityGrid', () => {
     expect(screen.getAllByRole('button')).toHaveLength(24);
     expect(screen.getByRole('button', { name: /14:00.*Reservado/i })).toBeDisabled();
     expect(screen.getByRole('button', { name: /15:00.*Disponible/i })).toBeEnabled();
+  });
+});
+
+describe('DatePicker', () => {
+  it('reports the selected date', () => {
+    const onChange = vi.fn();
+    render(<DatePicker date="2099-01-01" onChange={onChange} />);
+
+    fireEvent.change(screen.getByLabelText('Fecha'), { target: { value: '2099-01-02' } });
+
+    expect(onChange).toHaveBeenCalledWith('2099-01-02');
   });
 });

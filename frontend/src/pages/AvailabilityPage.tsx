@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AvailabilityGrid } from '../components/AvailabilityGrid';
 import { CourtList } from '../components/CourtList';
+import { DatePicker } from '../components/DatePicker';
 import { ReservationFeedback } from '../components/ReservationFeedback';
 import { ReservationForm } from '../components/ReservationForm';
 import { api, ApiError, type AvailabilityBlock } from '../services/apiClient';
@@ -17,5 +18,5 @@ export function AvailabilityPage() {
   useEffect(() => { if (!courtId || !date) return; api.availability(courtId, date).then((result) => { setBlocks(result.blocks); setError(''); }).catch((cause) => setError(cause instanceof ApiError ? cause.message : 'No fue posible consultar la disponibilidad.')); }, [courtId, date]);
   const courtName = courts.find((court) => court.id === courtId)?.name ?? 'Cancha';
   async function confirm() { if (selectedHour === null) return; try { await api.createReservation({ courtId, date, startHour: selectedHour }); setMessage('Reserva creada correctamente.'); setSelectedHour(null); const result = await api.availability(courtId, date); setBlocks(result.blocks); } catch (cause) { setError(cause instanceof ApiError ? cause.message : 'No fue posible crear la reserva.'); } }
-  return <section className="space-y-6"><div><h1 className="text-3xl font-bold">Disponibilidad</h1><p className="text-slate-600">Selecciona una cancha y una fecha.</p></div><CourtList courts={courts} selectedId={courtId} onSelect={setCourtId} /><label className="block font-medium">Fecha<input type="date" value={date} onChange={(event) => setDate(event.target.value)} className="ml-3 rounded border p-2" /></label><ReservationFeedback message={message} error={error} />{selectedHour !== null && <ReservationForm courtName={courtName} date={date} startHour={selectedHour} onConfirm={confirm} onCancel={() => setSelectedHour(null)} />}<AvailabilityGrid blocks={blocks} onSelect={setSelectedHour} /></section>;
+  return <section className="space-y-6"><div><h1 className="text-3xl font-bold">Disponibilidad</h1><p className="text-slate-600">Selecciona una cancha y una fecha.</p></div><CourtList courts={courts} selectedId={courtId} onSelect={setCourtId} /><DatePicker date={date} onChange={setDate} /><ReservationFeedback message={message} error={error} />{selectedHour !== null && <ReservationForm courtName={courtName} date={date} startHour={selectedHour} onConfirm={confirm} onCancel={() => setSelectedHour(null)} />}<AvailabilityGrid blocks={blocks} onSelect={setSelectedHour} /></section>;
 }

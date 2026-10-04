@@ -234,3 +234,14 @@ Foundational
   concurrencia y flujos de usuario.
 - No se crea una tarea de recuperación de contraseña, pagos, administración, notificaciones,
   reservas de más de una hora o matchmaking porque están fuera de alcance.
+
+## Phase 8: Convergence
+
+**Purpose**: Cerrar las brechas encontradas al comparar la implementación con la
+especificación, el plan y la constitución.
+
+- [X] T058 Ejecutar la migración versionada `db/migrations/001_initial.sql` desde `backend/src/db/connection.ts` para que el esquema de arranque no permanezca duplicado (T007/T008, partial)
+- [X] T059 Reutilizar `db/seed.ts` desde `backend/src/db/connection.ts` y conservar allí la siembra exacta de las cinco canchas (T009, partial)
+- [X] T060 Añadir una restricción de datos compatible con reservas históricas que impida más de una reserva activa futura por usuario y cubrirla en `backend/tests/integration/reservations.test.ts` (T010, missing)
+- [X] T061 Migrar `frontend/tailwind.config.js` y `frontend/postcss.config.js` a configuración ejecutable compatible con TypeScript, o documentar una alternativa TypeScript equivalente, para cumplir la Constitution II (Constitution II, contradicts, CRITICAL)
+- [X] T062 Extraer el selector de fecha de `frontend/src/pages/AvailabilityPage.tsx` al componente `frontend/src/components/DatePicker.tsx` y mantener sus pruebas de interacción (T034, partial)

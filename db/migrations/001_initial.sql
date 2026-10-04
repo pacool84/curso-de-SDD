@@ -34,3 +34,6 @@ CREATE TABLE IF NOT EXISTS reservations (
 
 CREATE UNIQUE INDEX IF NOT EXISTS active_court_slot
   ON reservations(courtId, date, startHour) WHERE status = 'active';
+
+CREATE UNIQUE INDEX IF NOT EXISTS active_user_reservation
+  ON reservations(userId) WHERE status = 'active';

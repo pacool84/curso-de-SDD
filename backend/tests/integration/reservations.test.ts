@@ -20,6 +20,23 @@ describe('reservations', () => {
     expect(second.body.code).toBe('RESERVATION_CONFLICT');
   });
 
+  it('enforces one active future reservation per user at the database level', async () => {
+    const { app, db } = await createTestApp();
+    const session = await register(app, 'database-constraint@example.com');
+    const userId = session.body.user.id as number;
+    const first = await request(app).post('/api/reservations').set('Cookie', session.headers['set-cookie']).send({
+      courtId: 1,
+      date: '2099-01-01',
+      startHour: 14,
+    });
+
+    expect(first.status).toBe(201);
+    expect(() => db.prepare(`
+      INSERT INTO reservations (userId, courtId, date, startHour, status)
+      VALUES (?, ?, ?, ?, 'active')
+    `).run(userId, 2, '2099-01-02', 15)).toThrow();
+  });
+
   it('rejects a colliding reservation from another user', async () => {
     const { app } = await createTestApp();
     const firstSession = await register(app, 'first@example.com');
