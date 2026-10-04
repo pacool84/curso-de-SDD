@@ -44,16 +44,19 @@ externa.
 ## Decisión 4: Representación de bloques de tiempo
 
 **Decision**: Representar cada reserva con `date` en formato `YYYY-MM-DD`, `startHour` como
-entero de 0 a 23 y duración fija de una hora. Los bloques se interpretan en la zona
-horaria local del club.
+entero de 7 a 21 y duración fija de una hora. La grilla genera 15 bloques, desde
+07:00–08:00 hasta 21:00–22:00; los bloques fuera de esa ventana no se muestran. Los
+bloques se interpretan en la zona horaria local del club.
 
-**Rationale**: La especificación solo permite bloques enteros de una hora y una grilla de
-24 posiciones. Separar fecha y hora facilita validar pasado, generar la grilla y aplicar
-índices únicos sin introducir intervalos arbitrarios.
+**Rationale**: La especificación solo permite bloques enteros de una hora y una grilla
+diaria acotada al horario operativo del club. Separar fecha y hora facilita validar pasado,
+generar los 15 bloques y aplicar índices únicos sin introducir intervalos arbitrarios.
 
-**Alternatives considered**: Guardar rangos libres de inicio y fin permitiría duraciones no
-permitidas y aumentaría la complejidad. Guardar timestamps UTC sin una política de zona
-horaria explícita podría mostrar bloques incorrectos alrededor del cambio de día.
+**Alternatives considered**: Mantener 24 bloques de 00:00 a 24:00 se descarta porque
+expondría horarios fuera de operación. Guardar rangos libres de inicio y fin permitiría
+duraciones no permitidas y aumentaría la complejidad. Guardar timestamps UTC sin una
+política de zona horaria explícita podría mostrar bloques incorrectos alrededor del cambio
+de día.
 
 ## Decisión 5: Catálogo fijo sembrado por el backend
 

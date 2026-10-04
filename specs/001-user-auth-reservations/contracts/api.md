@@ -76,7 +76,8 @@ Response `200 OK`:
 
 ### `GET /api/courts/:courtId/availability?date=YYYY-MM-DD`
 
-Returns the 24 one-hour blocks for the selected court and local date.
+Returns the 15 one-hour blocks for the selected court and local date, from 07:00–08:00
+through 21:00–22:00. Blocks outside this operating window are not returned.
 
 Responses:
 
@@ -95,6 +96,10 @@ Each block has this shape:
   "reservable": true
 }
 ```
+
+The availability response contains exactly 15 blocks with `startHour` values from 7
+through 21. A reservation request with a `startHour` outside that range is invalid and
+returns `400 Bad Request`.
 
 `status` is `available` or `reserved`; past blocks have `reservable: false` even when no
 reservation exists.

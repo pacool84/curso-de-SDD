@@ -53,14 +53,16 @@ Represents one one-hour assignment of a court to a user.
 | `userId` | integer | Required foreign key to `User` |
 | `courtId` | integer | Required foreign key to `Court` |
 | `date` | text | Required, `YYYY-MM-DD` in club local time |
-| `startHour` | integer | Required, range 0..23 |
+| `startHour` | integer | Required, range 7..21; represents a block ending no later than 22:00 |
 | `status` | text | `active` or `cancelled` |
 | `createdAt` | timestamp | Required |
 | `cancelledAt` | timestamp/null | Required when status is `cancelled` |
 
-The end time is derived as `startHour + 1`; no multi-hour reservation is stored. A past
-active reservation is treated as historical for display but is not cancellable. A cancelled
-reservation remains visible in the user's history and releases its court block.
+The end time is derived as `startHour + 1`; no multi-hour reservation is stored. Only
+blocks from 07:00–08:00 through 21:00–22:00 are valid; blocks outside the operating
+window are not displayed or reservable. A past active reservation is treated as historical
+for display but is not cancellable. A cancelled reservation remains visible in the user's
+history and releases its court block.
 
 ## Relationships and integrity rules
 
@@ -69,13 +71,14 @@ reservation remains visible in the user's history and releases its court block.
 - One `Court` has many reservations over different dates and hours.
 - One active court/date/start-hour combination can belong to at most one active reservation.
 - A reservation can be created only when its session is active, its block is not in the
-  past, and no active reservation conflicts with the same court/date/start-hour.
+  past, its `startHour` is between 7 and 21, and no active reservation conflicts with the
+  same court/date/start-hour.
 - Reservation creation and its conflict checks occur in one database transaction.
 - Suggested database constraints:
   - unique normalized user email;
   - unique active court/date/start-hour combination;
   - unique active reservation per user using a partial unique index;
-  - check `startHour BETWEEN 0 AND 23`;
+  - check `startHour BETWEEN 7 AND 21`;
   - check `status IN ('active', 'cancelled')`.
 
 ## State transitions

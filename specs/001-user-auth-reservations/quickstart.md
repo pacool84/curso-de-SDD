@@ -88,9 +88,12 @@ stack traces ni detalles internos.
 
 1. Con sesión activa, selecciona una de las cinco canchas.
 2. Selecciona una fecha futura.
-3. Confirma que aparecen 24 bloques de una hora en formato de 24 horas.
+3. Confirma que aparecen 15 bloques de una hora, desde 07:00–08:00 hasta 21:00–22:00,
+   en formato de 24 horas.
 4. Verifica que los bloques libres muestran “Disponible” y los ocupados “Reservado”.
-5. Consulta el día actual y confirma que los horarios ya transcurridos no pueden reservarse.
+5. Confirma que no aparecen bloques anteriores a las 07:00 ni posteriores o iguales a las
+   22:00.
+6. Consulta el día actual y confirma que los horarios ya transcurridos no pueden reservarse.
 
 ### Crear reserva y evitar colisiones
 

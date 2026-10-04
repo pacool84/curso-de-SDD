@@ -17,6 +17,12 @@ creación y gestión de reservas de pádel"
   con estado “Cancelada”? → A: Sí; la reserva permanece visible en el historial con
   estado “Cancelada”.
 
+### Session 2026-10-04
+
+- Q: ¿El horario debe mostrar bloques desde las 07:00–08:00 hasta las 21:00–22:00,
+  excluyendo cualquier bloque que comience a las 22:00? → A: Sí; se muestran 15 bloques,
+  desde 07:00–08:00 hasta 21:00–22:00.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Registrarse e iniciar sesión (Priority: P1)
@@ -54,7 +60,7 @@ consultar sus bloques horarios disponibles o reservados.
 turno válido y evitar intentos de reserva sobre horarios ocupados.
 
 **Independent Test**: Se puede probar iniciando sesión, seleccionando cada cancha y una
-fecha, y verificando que se muestra una grilla de 24 bloques de una hora con su estado.
+fecha, y verificando que se muestra una grilla de 15 bloques de una hora con su estado.
 
 **Acceptance Scenarios**:
 
@@ -62,7 +68,8 @@ fecha, y verificando que se muestra una grilla de 24 bloques de una hora con su 
    exactamente Cancha Laureles, Cancha El Poblado, Cancha Belén, Cancha Robledo y
    Cancha Envigado.
 2. **Given** una cancha seleccionada, **When** el usuario elige una fecha válida,
-   **Then** el sistema muestra los 24 bloques de una hora de ese día.
+   **Then** el sistema muestra los 15 bloques de una hora entre 07:00 y 22:00, desde
+   07:00–08:00 hasta 21:00–22:00.
 3. **Given** que existe una reserva en un bloque, **When** el usuario consulta esa fecha
    y cancha, **Then** el bloque aparece claramente como “Reservado”.
 4. **Given** que no existe una reserva en un bloque futuro, **When** el usuario consulta
@@ -138,8 +145,8 @@ disponible.
   disponibles y los bloques pasados como no reservables.
 - Una cancelación repetida o sobre una reserva ya cancelada debe dejar el estado consistente
   y mostrar un mensaje claro.
-- El cambio de día debe respetar el límite entre las 23:00 y las 00:00 sin crear bloques
-  de más de una hora ni duplicar horarios.
+- El cambio de día debe respetar el cierre de la ventana a las 22:00 y el inicio del día
+  siguiente a las 07:00, sin crear bloques fuera de la ventana ni duplicar horarios.
 
 ## Requirements *(mandatory)*
 
@@ -157,8 +164,9 @@ disponible.
   Cancha Laureles, Cancha El Poblado, Cancha Belén, Cancha Robledo y Cancha Envigado.
 - **FR-007**: System MUST permitir seleccionar una fecha y una cancha para consultar sus
   bloques horarios.
-- **FR-008**: System MUST mostrar 24 bloques consecutivos de una hora, expresados en formato
-  de 24 horas, con estado “Disponible” o “Reservado” cuando corresponda.
+- **FR-008**: System MUST mostrar 15 bloques consecutivos de una hora, desde 07:00–08:00
+  hasta 21:00–22:00, expresados en formato de 24 horas, con estado “Disponible” o
+  “Reservado” cuando corresponda. Los bloques fuera de esa ventana no deben aparecer.
 - **FR-009**: System MUST impedir que fechas y horarios pasados puedan reservarse.
 - **FR-010**: System MUST permitir confirmar únicamente bloques completos de una hora que
   estén disponibles.
@@ -196,7 +204,8 @@ disponible.
 - **SC-001**: Al menos el 95% de los usuarios de prueba pueden registrarse e iniciar
   sesión correctamente en menos de 2 minutos.
 - **SC-002**: El 100% de los usuarios autenticados de prueba pueden identificar una cancha,
-  una fecha y el estado de sus 24 bloques horarios sin asistencia externa.
+  una fecha y el estado de sus 15 bloques horarios entre 07:00 y 22:00 sin asistencia
+  externa.
 - **SC-003**: El 100% de los intentos de confirmación sobre bloques ocupados son rechazados
   sin crear reservas duplicadas, incluso durante pruebas con acciones simultáneas.
 - **SC-004**: Al menos el 95% de los usuarios de prueba pueden completar una reserva futura
@@ -214,8 +223,9 @@ disponible.
   contraseña en esta iteración.
 - Una “reserva activa” es una reserva futura no cancelada; las reservas pasadas y las
   reservas canceladas permanecen visibles como historial.
-- La grilla de un día contiene los bloques de 00:00–01:00 hasta 23:00–00:00; un bloque
-  cuyo inicio coincide con la hora actual se considera no reservable si ya comenzó.
+- La grilla de un día contiene únicamente los bloques de 07:00–08:00 hasta 21:00–22:00;
+  los bloques fuera de esa ventana no aparecen. Un bloque cuyo inicio coincide con la hora
+  actual se considera no reservable si ya comenzó.
 - Las fechas y horas se interpretan según la zona horaria local del club.
 - El catálogo de canchas es inmutable y no requiere una interfaz para administrarlo.
 - El pago se realiza presencialmente y no forma parte de este feature.

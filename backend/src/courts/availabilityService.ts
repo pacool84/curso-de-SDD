@@ -16,7 +16,8 @@ export function getAvailability(db: Database.Database, courtId: number, date: st
   const selectedDate = new Date(`${date}T00:00:00`);
   const isToday = selectedDate.toDateString() === today.toDateString();
   const isPastDate = selectedDate.getTime() < new Date(today.toDateString()).getTime();
-  return Array.from({ length: 24 }, (_, startHour) => {
+  return Array.from({ length: 15 }, (_, index) => {
+    const startHour = index + 7;
     const isPast = isPastDate || (isToday && startHour <= today.getHours());
     return {
       startHour,

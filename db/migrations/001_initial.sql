@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS reservations (
   userId INTEGER NOT NULL REFERENCES users(id),
   courtId INTEGER NOT NULL REFERENCES courts(id),
   date TEXT NOT NULL,
-  startHour INTEGER NOT NULL CHECK (startHour BETWEEN 0 AND 23),
+  startHour INTEGER NOT NULL CHECK (startHour BETWEEN 7 AND 21),
   status TEXT NOT NULL CHECK (status IN ('active', 'cancelled')),
   createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   cancelledAt TEXT

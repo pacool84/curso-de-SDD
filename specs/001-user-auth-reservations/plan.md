@@ -1,6 +1,6 @@
 # Implementation Plan: Autenticación y Reservas de Canchas
 
-**Branch**: `001-user-auth-reservations` | **Date**: 2026-09-27 | **Spec**: [spec.md](./spec.md)
+**Branch**: `001-user-auth-reservations` | **Date**: 2026-10-04 | **Spec**: [spec.md](./spec.md)
 
 **Input**: Feature specification from `specs/001-user-auth-reservations/spec.md`
 
@@ -34,10 +34,12 @@ responder normalmente en menos de 1 segundo; una cancelación debe reflejarse en
 consultas en menos de 5 segundos.
 
 **Constraints**: El catálogo contiene exactamente cinco canchas; cada reserva dura una
-hora; solo hay una reserva activa por usuario; toda reserva requiere sesión; las fechas y
-horas usan la zona horaria local del club; no se permiten ORMs pesados ni servicios externos.
+hora; solo hay una reserva activa por usuario; toda reserva requiere sesión; la
+disponibilidad diaria se limita a 15 bloques entre 07:00 y 22:00, con inicios válidos de
+07:00 a 21:00; las fechas y horas usan la zona horaria local del club; no se permiten
+ORMs pesados ni servicios externos.
 
-**Scale/Scope**: Una instancia local, cinco canchas, 24 bloques diarios por cancha y un
+**Scale/Scope**: Una instancia local, cinco canchas, 15 bloques diarios por cancha y un
 volumen inicial pequeño de usuarios; no se diseña escalado horizontal en esta iteración.
 
 ## Constitution Check
@@ -49,7 +51,8 @@ volumen inicial pequeño de usuarios; no se diseña escalado horizontal en esta 
 - **Estructura plana**: PASS. El código se limitará a `/frontend`, `/backend` y `/db`, sin
   capas arquitectónicas innecesarias.
 - **Catálogo cerrado y tiempo**: PASS. Las cinco canchas se definirán como datos fijos y
-  los bloques serán de una hora en formato de 24 horas.
+  los 15 bloques serán de una hora en formato de 24 horas, desde 07:00–08:00 hasta
+  21:00–22:00.
 - **Prevención de colisiones**: PASS. La creación validará disponibilidad dentro de una
   transacción y contará con índices únicos de integridad.
 - **Autenticación**: PASS. Las rutas protegidas exigirán una sesión activa.

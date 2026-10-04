@@ -50,6 +50,26 @@ describe('reservations', () => {
     expect(response.body.message).toBe('La cancha ya fue reservada en este horario.');
   });
 
+  it('rejects reservations outside the operating window', async () => {
+    const { app } = await createTestApp();
+    const session = await register(app, 'operating-hours@example.com');
+    const cookie = session.headers['set-cookie'];
+
+    const beforeOpening = await request(app).post('/api/reservations').set('Cookie', cookie).send({
+      courtId: 1,
+      date: '2099-01-01',
+      startHour: 6,
+    });
+    const afterClosing = await request(app).post('/api/reservations').set('Cookie', cookie).send({
+      courtId: 1,
+      date: '2099-01-01',
+      startHour: 22,
+    });
+
+    expect(beforeOpening.status).toBe(400);
+    expect(afterClosing.status).toBe(400);
+  });
+
   it('cancels an owned future reservation and keeps it in history', async () => {
     const { app } = await createTestApp();
     const session = await register(app, 'cancel@example.com');

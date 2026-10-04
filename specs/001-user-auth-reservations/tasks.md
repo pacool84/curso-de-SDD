@@ -28,7 +28,7 @@ constitución.
 
 **⚠️ CRITICAL**: Ninguna historia de usuario puede comenzar antes de completar esta fase.
 
-- [X] T007 Crear `db/migrations/001_initial.sql` con las tablas `users`, `sessions`, `courts` y `reservations`, incluyendo claves foráneas, `email` único, `startHour BETWEEN 0 AND 23` y `status IN ('active', 'cancelled')`
+- [X] T007 Crear `db/migrations/001_initial.sql` con las tablas `users`, `sessions`, `courts` y `reservations`, incluyendo claves foráneas, `email` único, `startHour BETWEEN 7 AND 21` y `status IN ('active', 'cancelled')`
 - [X] T008 [P] Implementar la conexión SQLite y ejecución de migraciones en `backend/src/db/connection.ts`, usando `db/padel.db` como archivo local
 - [X] T009 [P] Crear el seed inmutable de las cinco canchas en `db/seed.ts`: Cancha Laureles, Cancha El Poblado, Cancha Belén, Cancha Robledo y Cancha Envigado
 - [X] T010 Configurar en `db/migrations/001_initial.sql` los índices únicos parciales para impedir una reserva activa duplicada por cancha/fecha/hora y más de una reserva activa por usuario
@@ -76,22 +76,23 @@ disponibilidad y reservas.
 
 ## Phase 4: User Story 2 - Consultar disponibilidad de una cancha (Priority: P1)
 
-**Goal**: Mostrar el catálogo cerrado y la grilla de 24 bloques horarios con estados
+**Goal**: Mostrar el catálogo cerrado y la grilla de 15 bloques horarios entre 07:00 y 22:00 con estados
 disponible, reservado o no reservable por pasado.
 
 **Independent Test**: Con sesión activa, seleccionar cada cancha y una fecha; verificar los
-24 bloques, sus estados y que los horarios pasados no puedan reservarse.
+15 bloques entre 07:00–08:00 y 21:00–22:00, sus estados y que los horarios pasados no
+puedan reservarse.
 
 ### Tests for User Story 2
 
 - [X] T027 [P] [US2] Crear pruebas de contrato para `GET /api/courts` y `GET /api/courts/:courtId/availability?date=YYYY-MM-DD` en `backend/tests/contract/courts.test.ts`
-- [X] T028 [P] [US2] Crear pruebas de integración para catálogo exacto, grilla de 24 bloques, reservas ocupadas y horarios pasados en `backend/tests/integration/availability.test.ts`
+- [X] T028 [P] [US2] Crear pruebas de integración para catálogo exacto, grilla de 15 bloques entre 07:00 y 22:00, reservas ocupadas y horarios pasados en `backend/tests/integration/availability.test.ts`
 - [X] T029 [P] [US2] Crear pruebas de interacción para selección de cancha, fecha y estados de la grilla en `frontend/tests/availability.test.tsx`
 
 ### Implementation for User Story 2
 
 - [X] T030 [P] [US2] Implementar consulta del catálogo fijo en `backend/src/courts/courtService.ts` y asegurar que solo existan las cinco canchas definidas
-- [X] T031 [US2] Implementar generación de los 24 bloques y cálculo de `available`, `reserved` y `reservable` en `backend/src/courts/availabilityService.ts`, usando la zona horaria local del club
+- [X] T031 [US2] Implementar generación de los 15 bloques con `startHour` de 7 a 21 y cálculo de `available`, `reserved` y `reservable` en `backend/src/courts/availabilityService.ts`, usando la zona horaria local del club
 - [X] T032 [US2] Crear las rutas `GET /api/courts` y `GET /api/courts/:courtId/availability` en `backend/src/courts/courtRoutes.ts`, protegiendo la disponibilidad completa con sesión activa
 - [X] T033 [P] [US2] Crear el catálogo y selector de canchas en `frontend/src/components/CourtList.tsx` y `frontend/src/pages/AvailabilityPage.tsx`
 - [X] T034 [P] [US2] Crear el selector de fecha y la grilla de bloques de una hora en `frontend/src/components/DatePicker.tsx` y `frontend/src/components/AvailabilityGrid.tsx`
@@ -245,3 +246,14 @@ especificación, el plan y la constitución.
 - [X] T060 Añadir una restricción de datos compatible con reservas históricas que impida más de una reserva activa futura por usuario y cubrirla en `backend/tests/integration/reservations.test.ts` (T010, missing)
 - [X] T061 Migrar `frontend/tailwind.config.js` y `frontend/postcss.config.js` a configuración ejecutable compatible con TypeScript, o documentar una alternativa TypeScript equivalente, para cumplir la Constitution II (Constitution II, contradicts, CRITICAL)
 - [X] T062 Extraer el selector de fecha de `frontend/src/pages/AvailabilityPage.tsx` al componente `frontend/src/components/DatePicker.tsx` y mantener sus pruebas de interacción (T034, partial)
+
+## Phase 9: Convergence - Horario operativo
+
+**Purpose**: Alinear la implementación existente con la ventana operativa clarificada de
+07:00 a 22:00 y sus 15 bloques reservables.
+
+- [X] T063 [P] [US2] Actualizar las pruebas de disponibilidad para verificar exactamente 15 bloques, ausencia de horarios fuera de 07:00–22:00 y estados pasados en `backend/tests/integration/availability.test.ts`
+- [X] T064 [US2] Actualizar el límite persistente a `startHour BETWEEN 7 AND 21` en `db/migrations/001_initial.sql` y cambiar la generación de disponibilidad para producir únicamente esos bloques en `backend/src/courts/availabilityService.ts`
+- [X] T065 [US3] Validar y rechazar con `400 Bad Request` cualquier reserva cuyo `startHour` esté fuera de 7..21 en `backend/src/reservations/reservationService.ts` y cubrir los límites en `backend/tests/integration/reservations.test.ts`
+- [X] T066 [P] [US2] Actualizar la prueba de interacción para comprobar 15 bloques visibles y excluir horarios fuera de la ventana en `frontend/tests/availability.test.tsx`
+- [X] T067 [P] Actualizar los escenarios manuales y criterios de validación de la ventana 07:00–22:00 en `specs/001-user-auth-reservations/quickstart.md`

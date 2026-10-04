@@ -5,7 +5,7 @@ import type { Reservation } from '../shared/types.js';
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
 function blockDate(date: string, startHour: number): Date {
-  if (!datePattern.test(date) || !Number.isInteger(startHour) || startHour < 0 || startHour > 23) {
+  if (!datePattern.test(date) || !Number.isInteger(startHour) || startHour < 7 || startHour > 21) {
     throw new HttpError(400, 'INVALID_BLOCK', 'Selecciona una fecha y un bloque de una hora válidos.');
   }
   const value = new Date(`${date}T${String(startHour).padStart(2, '0')}:00:00`);
